@@ -6,24 +6,54 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { EyeClosedIcon } from '@radix-ui/react-icons';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import Loader from '@/components/global/spinner/Loader';
 
 
 const initialState = {
     email: '',
     password: '',
     terms: false,
-    showPassword: false
+    showPassword: false,
+    loading: false
 }
 
 function Form() {
     const [state, setState] = React.useState(initialState)
+    const router = useRouter()
 
     const handelClick = async () => {
+        if (!state.terms) return alert("Please accept terms and conditions")
+            if (!state.email) return alert("Please enter email")
+                if (!state.password) return alert("Please enter password")
+                    setState({ ...state, loading: true })
 
+      const res =  await signIn("login", {
+            email: state.email,
+            password: state.password,
+            redirect: false
+        })
+        //console.log(res) 
+        setState({ ...state, loading: false })
+        if(res?.ok === false) return alert("Invalid email or password")  
+            if(res?.ok === true) return router.push('/')
+    }
+    const handelGoogle = async () => {
+        setState({ ...state, loading: true })
+
+       const res = await signIn("google", {
+            redirect: false,
+        })
+
+        setState({ ...state, loading: false })
+        if(res?.ok === false) return alert("something went wrong")  
+
+            if(res?.ok === true) return router.push('/')
     }
 
     return (
-        <div className="max-w-[400px] w-full px-6 py-8 space-y-6">
+        <div className="max-w-[400px] w-full px-6 py-8 space-y-6 z-50">
             <div className="flex justify-center">
                 <MountainIcon className="h-8 w-8" />
                 <span className="sr-only">Acme Inc</span>
@@ -34,6 +64,7 @@ function Form() {
                     <Input
                         id="email"
                         type="email"
+                        value={state.email}
                         onChange={(e) => setState({ ...state, email: e.target.value })}
                         placeholder="m@example.com"
                         required
@@ -45,6 +76,7 @@ function Form() {
                         <Input
                             onChange={(e) => setState({ ...state, password: e.target.value })}
                             id="password"
+                            value={state.password}
                             type={state.showPassword ? 'text' : 'password'}
                             placeholder="••••••••"
                             required
@@ -73,9 +105,15 @@ function Form() {
                 </div>
             </div>
             <div className="space-y-2">
-                <Button className="w-full"
-                    onClick={handelClick}
-                >Login</Button>
+            {state.loading ? (
+        <Button className="w-full">
+          <Loader  />
+        </Button>
+      ) : (
+        <Button className="w-full" onClick={handelClick}>
+          Login
+        </Button>
+      )}
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
@@ -86,10 +124,13 @@ function Form() {
                         </span>
                     </div>
                 </div>
-                <Button variant="outline" className="w-full">
-                    <ChromeIcon className="mr-2 h-4 w-4" />
-                    Login with Google
-                </Button>
+                {state.loading ?  <Button variant="outline" className="w-full">
+         <Loader color="black" />
+        </Button> :
+        <Button variant="outline" className="w-full" onClick={handelGoogle}>
+          <ChromeIcon className="mr-2 h-4 w-4" />
+          Register with Google
+        </Button> }
                 <div className="text-center text-sm">
                     Don&apos;t have an account?{" "}
                     <Link href="/register" className="underline" prefetch={false}>

@@ -11,9 +11,6 @@ const authOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      async profile(){
-        
-      }
     }),
     CredentialsProvider({
       name: "register",
@@ -34,6 +31,7 @@ const authOptions = {
         });
 
         if (user) {
+          console.log("User already exists");
           return null;
         }
 
@@ -75,6 +73,7 @@ const authOptions = {
         }
 
         if (user.loginType !== "credential") {
+          console.log("Login type not credential");
           return null;
         }
 
@@ -83,12 +82,9 @@ const authOptions = {
           user.password as string
         );
         if (!isValid) {
+          console.log("Invalid password");
           return null;
         }
-        if (user.isVerified === false) {
-          return null;
-        }
-
         return { id: String(user.id), email: user.email };
       },
     }),
@@ -98,8 +94,9 @@ const authOptions = {
     async signIn({ account, profile }) {
       console.log("callbacks")
       console.log(account, profile);
-      if (!account || !profile) return false;
+      if (!account ) return false;
       if (account.provider === "google") {
+        if(!profile) return false
         const user = await prisma.user.findUnique({
           where: {
             email: profile.email,
@@ -109,6 +106,7 @@ const authOptions = {
           const user = await prisma.user.create({
             data: {
               email: profile.email as string,
+              profile_image: profile.image,
               loginType: "google",
               isVerified: true,
             },
@@ -120,8 +118,18 @@ const authOptions = {
         }
         return true;
       }
+      if(account.provider === "register" || account.provider === "login"){ 
+        return true
+      }
       return true;
     },
+    jwt({ token, user }) {
+      console.log(token, user)
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
+    }
   },
   cookies: {
     sessionToken: {
@@ -138,8 +146,6 @@ const authOptions = {
   jwt: {
     maxAge: 60 * 60 * 24 * 30,
   },
-  debug: true,
-
   logger: {
     error(code, metadata) {
       console.error(code, metadata);
@@ -151,6 +157,10 @@ const authOptions = {
       console.debug(code, metadata);
     },
   },
+  pages: {
+    signIn: "/login",
+
+  }
 } satisfies NextAuthOptions;
 
 const handler = NextAuth(authOptions);
