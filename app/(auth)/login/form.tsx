@@ -129,7 +129,7 @@ function Form() {
         </Button> :
         <Button variant="outline" className="w-full" onClick={handelGoogle}>
           <ChromeIcon className="mr-2 h-4 w-4" />
-          Register with Google
+          Login with Google
         </Button> }
                 <div className="text-center text-sm">
                     Don&apos;t have an account?{" "}

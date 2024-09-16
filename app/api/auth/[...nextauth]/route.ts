@@ -44,7 +44,6 @@ const authOptions = {
             loginType: "credential",
           },
         });
-        console.log( String(newUser.id),  newUser.email)
 
         return { id: String(newUser.id), email: newUser.email };
       },
@@ -89,11 +88,13 @@ const authOptions = {
       },
     }),
   ],
+  session:{
+    strategy: "jwt",
+  },
   secret: process.env.NEXTAUTH_SECRET as string,
   callbacks: {
     async signIn({ account, profile }) {
-      console.log("callbacks")
-      console.log(account, profile);
+      // console.log(account, profile);
       if (!account ) return false;
       if (account.provider === "google") {
         if(!profile) return false
@@ -124,24 +125,12 @@ const authOptions = {
       return true;
     },
     jwt({ token, user }) {
-      console.log(token, user)
+      //console.log(token, user)
       if (user) {
         token.id = user.id;
       }
       return token;
     }
-  },
-  cookies: {
-    sessionToken: {
-      name: "token",
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        maxAge: 60 * 60 * 24 * 30,
-      },
-    },
   },
   jwt: {
     maxAge: 60 * 60 * 24 * 30,
@@ -159,7 +148,7 @@ const authOptions = {
   },
   pages: {
     signIn: "/login",
-
+    newUser: "/register",
   }
 } satisfies NextAuthOptions;
 
