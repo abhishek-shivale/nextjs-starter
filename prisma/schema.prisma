@@ -29,3 +29,4 @@ model User {
   updatedAt     DateTime  @updatedAt
   isVerified    Boolean   @default(false)
 }
+
