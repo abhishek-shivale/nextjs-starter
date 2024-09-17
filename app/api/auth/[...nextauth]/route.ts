@@ -99,6 +99,7 @@ const authOptions = {
             email: profile.email,
           },
         });
+        console.log("user",user);
         if (!user) {
           const user = await prisma.user.create({
             data: {

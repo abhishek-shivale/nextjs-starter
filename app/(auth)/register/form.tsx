@@ -20,6 +20,7 @@ const initialState = {
 
 function Form() {
   const [state, setState] = React.useState(initialState);
+  
   const router = useRouter();
 
   const handelClick = async () => {
@@ -39,8 +40,8 @@ function Form() {
   const handelGoogle = async () => {
     setState({ ...state, loading: true });
     const res = await signIn('google', {
-      redirect: false,
     });
+    console.log('response', res);
     setState({ ...state, loading: false });
     if (res?.ok === false) return alert('something went wrong');
     if (res?.ok === true) return router.push('/');
