@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicPaths = ['/login', '/register'];
+const publicPaths = ['/login', '/register', '/'];
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({
@@ -11,11 +11,13 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
+  console.log(token);
+
   if (publicPaths.includes(path) && token) {
     return NextResponse.redirect(new URL('/', req.url));
   }
 
-  if (path.startsWith('/protected') && !token) {
+  if (path.startsWith('/dashboard') && !token) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
@@ -23,5 +25,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/login', '/register', '/dashboard/:path*'],
-};
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+}
