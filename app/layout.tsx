@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import Provider from '@/components/global/SessionProvider/SessionProvider';
+import Provider from '@/components/SessionProvider/SessionProvider';
 import { getServerSession } from 'next-auth/next';
 import { GET } from '@/app/api/auth/[...nextauth]/route';
 import { Session } from 'next-auth';

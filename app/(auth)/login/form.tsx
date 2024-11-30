@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { EyeClosedIcon } from '@radix-ui/react-icons';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Loader from '@/components/global/spinner/Loader';
+import Loader from '@/components/spinner/Loader';
 
 const initialState = {
   email: '',
