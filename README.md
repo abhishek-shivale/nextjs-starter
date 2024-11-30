@@ -8,6 +8,7 @@ A Next.js starter template to help you build scalable, modern web applications. 
 
 ---
 
+
 ## Features ✨
 
 - **Authentication**: Email/password and Google provider integrated with NextAuth.js.
