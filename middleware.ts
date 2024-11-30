@@ -1,7 +1,7 @@
 import { getToken } from 'next-auth/jwt';
 import { NextRequest, NextResponse } from 'next/server';
 
-const publicPaths = ['/login', '/register', '/'];
+const publicPaths = ['/login', '/register',];
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({
@@ -11,7 +11,12 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
-  console.log("token",token);
+  console.log("Request Headers:", req.headers);
+  console.log("Cookies:", req.cookies);
+  console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
+
+  console.log("Token:", token);
+
 
   if (publicPaths.includes(path) && token) {
     return NextResponse.redirect(new URL('/', req.url));
