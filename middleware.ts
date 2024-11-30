@@ -11,7 +11,7 @@ export default withAuth(
 
  async function middleware (req) {
     const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
-   console.log(req.nextUrl.pathname)
+   console.log(token)
    if(url.includes(req.nextUrl.pathname )&& token){
     return NextResponse.redirect(new URL('/', req.url))}
   },
