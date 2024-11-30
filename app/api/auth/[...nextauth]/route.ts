@@ -99,7 +99,7 @@ const authOptions = {
             email: profile.email,
           },
         });
-        console.log("user",user);
+        console.log('user', user);
         if (!user) {
           const user = await prisma.user.create({
             data: {
@@ -149,7 +149,6 @@ const authOptions = {
   },
 } satisfies NextAuthOptions;
 
- const handler = NextAuth(authOptions);
-export const {auth} = NextAuth(authOptions);
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
