@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
   const path = req.nextUrl.pathname;
 
-  console.log(token);
+  console.log("token",token);
 
   if (publicPaths.includes(path) && token) {
     return NextResponse.redirect(new URL('/', req.url));
