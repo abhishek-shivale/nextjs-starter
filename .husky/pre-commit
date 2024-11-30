@@ -1,4 +1,6 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+pnpm dlx lint-staged || EXIT_CODE=$?
 
-npm run lint
+if [ ! -z "$EXIT_CODE" ]; then
+  echo "Exiting with exit code: $EXIT_CODE"
+  exit $EXIT_CODE
+fi
